@@ -1,4 +1,3 @@
-import { User } from 'user';
 import {
   Column,
   Entity,
@@ -6,6 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { User } from 'user/entity/user.entity';
 
 @Entity({ name: 'address', schema: 'nest_db' })
 export class Address {

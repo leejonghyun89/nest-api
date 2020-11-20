@@ -7,6 +7,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+
+import { CreateAddress } from 'address/dto/address.dto';
 import { CreateUser, UpdateUser } from 'user/dto/user.dto';
 import { UserService } from 'user/service/user.service';
 
@@ -19,6 +21,14 @@ export class UserController {
   @Post()
   public async createUser(@Body() createUser: CreateUser) {
     return this.userService.createUser(createUser);
+  }
+
+  @Post(':id/address')
+  public async createAddressByUser(
+    @Param('id') id: number,
+    @Body() createAddress: CreateAddress,
+  ) {
+    return this.userService.createAddressByUser(id, createAddress);
   }
 
   @Get()

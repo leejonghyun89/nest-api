@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ResponseAddress } from 'address/dto/address.dto';
-import { Address } from 'address/entity/address.entity';
 
+import { CreateAddress, ResponseAddress } from 'address/dto/address.dto';
+import { Address } from 'address/entity/address.entity';
+import { AddressService } from 'address/service/address.service';
 import {
   CreateUser,
   ResponseUser,
@@ -13,29 +14,59 @@ import { UserRepository } from 'user/repository/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly addressService: AddressService,
+  ) {}
 
   public async createUser(createUser: CreateUser): Promise<ResponseUser> {
+    const address = await this.addressService.createAddress(createUser.address);
+
     const beforeUser = new User();
     beforeUser.email = createUser.email;
     beforeUser.username = createUser.username;
     beforeUser.password = createUser.password;
-
-    const beforeAddress = new Address();
-    beforeAddress.city = createUser.address.city;
-    beforeAddress.street = createUser.address.street;
-    beforeAddress.zipCode = createUser.address.zipCode;
-
-    beforeUser.address = [beforeAddress];
+    beforeUser.address = [address];
 
     const user = await this.userRepository.save(beforeUser);
-    const address = await user.address;
 
     return {
       userId: user.id,
       username: user.username,
       email: user.email,
-      address,
+      address: [
+        {
+          id: address.id,
+          city: address.city,
+          street: address.street,
+          zipCode: address.zipCode,
+        },
+      ],
+    };
+  }
+
+  public async createAddressByUser(
+    id: number,
+    createAddress: CreateAddress,
+  ): Promise<ResponseUser> {
+    const user = await this.getUserById(id);
+
+    const newAddress = new Address();
+    newAddress.city = createAddress.city;
+    newAddress.street = createAddress.street;
+    newAddress.zipCode = createAddress.zipCode;
+    newAddress.user = user;
+
+    await this.addressService.createAddressByUser(newAddress);
+
+    const afterUser = await this.getUserById(id);
+    const afterAddress = await afterUser.address;
+
+    return {
+      userId: user.id,
+      username: user.username,
+      email: user.email,
+      address: afterAddress,
     };
   }
 
