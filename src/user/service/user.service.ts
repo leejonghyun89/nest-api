@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ResponseAddress } from 'address/dto/address.dto';
+import { Address } from 'address/entity/address.entity';
+
 import {
   CreateUser,
   ResponseUser,
@@ -8,14 +9,11 @@ import {
   UpdateUser,
 } from 'user/dto/user.dto';
 import { User } from 'user/entity/user.entity';
-
-// import { Address, ResponseAddress } from 'address';
+import { UserRepository } from 'user/repository/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async createUser(createUser: CreateUser): Promise<ResponseUser> {
     const beforeUser = new User();
@@ -23,21 +21,21 @@ export class UserService {
     beforeUser.username = createUser.username;
     beforeUser.password = createUser.password;
 
-    // const beforeAddress = new Address();
-    // beforeAddress.city = createUser.address.city;
-    // beforeAddress.street = createUser.address.street;
-    // beforeAddress.zipCode = createUser.address.zipCode;
+    const beforeAddress = new Address();
+    beforeAddress.city = createUser.address.city;
+    beforeAddress.street = createUser.address.street;
+    beforeAddress.zipCode = createUser.address.zipCode;
 
-    // beforeUser.address = [beforeAddress];
+    beforeUser.address = [beforeAddress];
 
     const user = await this.userRepository.save(beforeUser);
-    // const address = await user.address;
+    const address = await user.address;
 
     return {
       userId: user.id,
       username: user.username,
       email: user.email,
-      // address,
+      address,
     };
   }
 
@@ -56,20 +54,20 @@ export class UserService {
 
     return Promise.all(
       users.map(async (item) => {
-        // const address = await item.address;
+        const address = await item.address;
 
         return {
           userId: item.id,
           username: item.username,
           email: item.email,
-          // address: address.map((item) => {
-          //   return {
-          //     id: item.id,
-          //     city: item.city,
-          //     street: item.street,
-          //     zipCode: item.zipCode,
-          //   };
-          // }),
+          address: address.map((item) => {
+            return {
+              id: item.id,
+              city: item.city,
+              street: item.street,
+              zipCode: item.zipCode,
+            };
+          }),
         };
       }),
     )
@@ -92,22 +90,22 @@ export class UserService {
 
   public async getUserForResponseById(id: number): Promise<ResponseUser> {
     const user = await this.userRepository.findOne(id);
-    // const address = await user.address;
+    const address = await user.address;
 
-    // const responseAddress: ResponseAddress[] = address.map((item) => {
-    //   return {
-    //     id: item.id,
-    //     city: item.city,
-    //     street: item.street,
-    //     zipCode: item.zipCode,
-    //   };
-    // });
+    const responseAddress: ResponseAddress[] = address.map((item) => {
+      return {
+        id: item.id,
+        city: item.city,
+        street: item.street,
+        zipCode: item.zipCode,
+      };
+    });
 
     return {
       userId: user.id,
       username: user.username,
       email: user.email,
-      // address: responseAddress,
+      address: responseAddress,
     };
   }
 

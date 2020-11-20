@@ -12,7 +12,9 @@ import { UserService } from 'user/service/user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {
+    this.userService = userService;
+  }
 
   @Post()
   public async createUser(@Body() createUser: CreateUser) {

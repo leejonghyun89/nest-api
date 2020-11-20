@@ -1,17 +1,17 @@
-// import { CreateAddress, ResponseAddress } from 'address';
+import { CreateAddress, ResponseAddress } from 'address/dto/address.dto';
 
 export class CreateUser {
   username: string;
   email: string;
   password: string;
-  // address: CreateAddress;
+  address: CreateAddress;
 }
 
 export class ResponseUser {
   userId: number;
   username: string;
   email: string;
-  // address: ResponseAddress[];
+  address: ResponseAddress[];
 }
 
 export class UpdateUser {

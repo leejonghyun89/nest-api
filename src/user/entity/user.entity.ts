@@ -1,4 +1,5 @@
 // import { Address } from 'address';
+import { Address } from 'address/entity/address.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -23,10 +24,10 @@ export class User {
   @Column({ length: 100 })
   password: string;
 
-  // @OneToMany(() => Address, (address) => address.user, {
-  //   lazy: true,
-  //   onDelete: 'CASCADE',
-  // })
-  // @JoinColumn({ name: 'user_id' })
-  // address: Promise<Address[]> | Address[];
+  @OneToMany(() => Address, (address) => address.user, {
+    lazy: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'user_id' })
+  address: Promise<Address[]> | Address[];
 }
