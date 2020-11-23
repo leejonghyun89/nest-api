@@ -44,6 +44,11 @@ export class UserController {
     return this.userService.getUserForResponseById(id);
   }
 
+  @Get('/name/:username')
+  public async getUserByUsername(@Param('username') username: string) {
+    return this.userService.getUserByUsername(username);
+  }
+
   @Put(':id')
   public async updateUserById(
     @Param('id') id: number,

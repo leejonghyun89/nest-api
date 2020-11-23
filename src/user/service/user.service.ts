@@ -153,6 +153,40 @@ export class UserService {
     };
   }
 
+  public async getUserByUsername(
+    username: string,
+  ): Promise<void | ResponseUser[]> {
+    const users = await this.userRepository.findByUsername(username);
+
+    return Promise.all(
+      users.map(async (item) => {
+        const address = await item.address;
+
+        return {
+          userId: item.id,
+          created: item.created,
+          username: item.username,
+          email: item.email,
+          address: address.map((item) => {
+            return {
+              addressId: item.id,
+              created: item.created,
+              city: item.city,
+              street: item.street,
+              zipCode: item.zipCode,
+            };
+          }),
+        };
+      }),
+    )
+      .then((res) => {
+        return res;
+      })
+      .catch((error) => {
+        console.log('error', error);
+      });
+  }
+
   public async updateUserById(
     id: number,
     updateUser: UpdateUser,
