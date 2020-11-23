@@ -12,6 +12,6 @@ import { AddressService } from 'address/service/address.service';
   imports: [TypeOrmModule.forFeature([Address, AddressRepository])],
   controllers: [AddressController],
   providers: [AddressService, AddressRepository, AddressRepositoryProvider],
-  exports: [AddressService, AddressRepository],
+  exports: [AddressService],
 })
 export class AddressModule {}

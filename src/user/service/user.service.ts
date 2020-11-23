@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateAddress, ResponseAddress } from 'address/dto/address.dto';
+import { CreateAddress } from 'address/dto/address.dto';
 import { Address } from 'address/entity/address.entity';
 import { AddressService } from 'address/service/address.service';
 import {
@@ -32,11 +32,13 @@ export class UserService {
 
     return {
       userId: user.id,
+      created: user.created,
       username: user.username,
       email: user.email,
       address: [
         {
-          id: address.id,
+          addressId: address.id,
+          created: address.created,
           city: address.city,
           street: address.street,
           zipCode: address.zipCode,
@@ -64,9 +66,18 @@ export class UserService {
 
     return {
       userId: user.id,
+      created: user.created,
       username: user.username,
       email: user.email,
-      address: afterAddress,
+      address: afterAddress.map((item) => {
+        return {
+          addressId: item.id,
+          created: item.created,
+          city: item.city,
+          street: item.street,
+          zipCode: item.zipCode,
+        };
+      }),
     };
   }
 
@@ -89,11 +100,13 @@ export class UserService {
 
         return {
           userId: item.id,
+          created: item.created,
           username: item.username,
           email: item.email,
           address: address.map((item) => {
             return {
-              id: item.id,
+              addressId: item.id,
+              created: item.created,
               city: item.city,
               street: item.street,
               zipCode: item.zipCode,
@@ -123,20 +136,20 @@ export class UserService {
     const user = await this.userRepository.findOne(id);
     const address = await user.address;
 
-    const responseAddress: ResponseAddress[] = address.map((item) => {
-      return {
-        id: item.id,
-        city: item.city,
-        street: item.street,
-        zipCode: item.zipCode,
-      };
-    });
-
     return {
       userId: user.id,
+      created: user.created,
       username: user.username,
       email: user.email,
-      address: responseAddress,
+      address: address.map((item) => {
+        return {
+          addressId: item.id,
+          created: item.created,
+          city: item.city,
+          street: item.street,
+          zipCode: item.zipCode,
+        };
+      }),
     };
   }
 

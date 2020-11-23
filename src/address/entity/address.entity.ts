@@ -1,3 +1,4 @@
+import { BaseEntity } from 'common';
 import {
   Column,
   Entity,
@@ -9,7 +10,7 @@ import {
 import { User } from 'user/entity/user.entity';
 
 @Entity({ name: 'address', schema: 'nest_db' })
-export class Address {
+export class Address extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     name: 'address_id',
   })

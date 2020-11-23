@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CreateAddress } from 'address/dto/address.dto';
+import { CreateAddress, UpdateAddress } from 'address/dto/address.dto';
 import { Address } from 'address/entity/address.entity';
 import { AddressRepository } from 'address/repository/address.repository';
-import { User } from 'user/entity/user.entity';
 
 @Injectable()
 export class AddressService {
@@ -26,10 +25,23 @@ export class AddressService {
     await this.addressRepository.save(address);
   }
 
-  public async deleteAddressByUser(user: User): Promise<void> {
-    const address = await user.address;
-    const addressIds = address.map((item) => item.id);
+  public async getAddressById(id: number): Promise<Address> {
+    return this.addressRepository.findOne(id);
+  }
 
-    await this.addressRepository.delete(addressIds);
+  public async updateAddressById(id: number, updateAddress: UpdateAddress) {
+    this.addressRepository.update(
+      { id },
+      {
+        city: updateAddress.city,
+        street: updateAddress.street,
+        zipCode: updateAddress.zipCode,
+      },
+    );
+  }
+
+  public async deleteAddresById(id: number) {
+    const address = await this.getAddressById(id);
+    this.addressRepository.delete(address);
   }
 }

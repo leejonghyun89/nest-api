@@ -7,9 +7,10 @@ import {
 } from 'typeorm';
 
 import { Address } from 'address/entity/address.entity';
+import { BaseEntity } from 'common';
 
 @Entity({ name: 'user', schema: 'nest_db' })
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     name: 'user_id',
   })

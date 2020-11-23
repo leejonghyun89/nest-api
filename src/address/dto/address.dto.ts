@@ -11,9 +11,23 @@ export class CreateAddress {
   zipCode: string;
 }
 
+export class UpdateAddress {
+  @ApiProperty()
+  city: string;
+
+  @ApiProperty()
+  street: string;
+
+  @ApiProperty()
+  zipCode: string;
+}
+
 export class ResponseAddress {
   @ApiProperty()
-  id: number;
+  addressId: number;
+
+  @ApiProperty()
+  created: Date;
 
   @ApiProperty()
   city: string;

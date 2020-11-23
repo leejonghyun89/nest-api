@@ -21,6 +21,9 @@ export class ResponseUser {
   userId: number;
 
   @ApiProperty()
+  created: Date;
+
+  @ApiProperty()
   username: string;
 
   @ApiProperty()
