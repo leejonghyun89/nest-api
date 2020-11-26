@@ -90,6 +90,8 @@ export class UserService {
 
     const users = await this.userRepository
       .createQueryBuilder('user')
+      // 사용 여부와 사용 미여부 차이
+      // .leftJoinAndSelect('user.address', 'address')
       .skip(skip)
       .limit(pageSize)
       .getMany();

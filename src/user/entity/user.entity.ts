@@ -10,6 +10,9 @@ import { Address } from 'address/entity/address.entity';
 import { BaseEntity } from 'common';
 
 @Entity({ name: 'user', schema: 'nest_db' })
+/**
+ * Data Mapper 패턴 : Repository 이용하여 객체를 CRUD 사용
+ */
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('increment', {
     name: 'user_id',
